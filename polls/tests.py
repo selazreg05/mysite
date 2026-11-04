@@ -1,4 +1,4 @@
-
+import os
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 
@@ -20,9 +20,12 @@ class MySeleniumTests(StaticLiveServerTestCase):
         opts = Options()
         opts.add_argument("-headless")
 
-        cls.selenium = webdriver.Firefox(options=opts)
-        cls.selenium.implicitly_wait(5)
+        firefox_bin = os.environ.get("FIREFOX_BIN")
 
+        if firefox_bin:
+             opts.binary_location = firefox_bin
+
+        cls.selenium = webdriver.Firefox(options=opts)
         # Creacio del superusuari inicial
         user = User.objects.create_user(
             username="isard",
