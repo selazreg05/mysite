@@ -129,18 +129,18 @@ class MySeleniumTests(StaticLiveServerTestCase):
         # -----------------------------------------
         # 4. TANCAR SESSIO DEL SUPERUSUARI
         # -----------------------------------------
+        self.selenium.get(self.live_server_url + "/admin/")
 
-        self.selenium.get(
-            self.live_server_url + "/admin/"
-        )
-
-        # Django 5.2 utilitza un formulari POST per logout
-        logout_form = self.selenium.find_element(
-            By.XPATH,
-            "//form[contains(@action, 'logout')]"
+        logout_form = WebDriverWait(self.selenium, 10).until(
+              EC.presence_of_element_located((By.ID, "logout-form"))
         )
 
         logout_form.submit()
+
+        # Esperem que Django ens porti a la pàgina de login
+        WebDriverWait(self.selenium, 10).until(
+             EC.presence_of_element_located((By.ID, "id_username"))
+        )
 
         # -----------------------------------------
         # 5. LOGIN COM A USUARI CONSULTA
